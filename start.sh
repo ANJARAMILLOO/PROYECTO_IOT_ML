@@ -10,10 +10,6 @@ set -e
 # Mensaje de inicio
 echo "Iniciando servicio Flask ML en Render..."
 
-# Activar virtualenv si lo tienes (descomentar si usas venv)
-# echo "Activando entorno virtual..."
-# source venv/bin/activate
-
 # Lanzar Gunicorn con 2 workers y timeout extendido
 echo "Ejecutando Gunicorn..."
 gunicorn api_modelo:app \
@@ -24,4 +20,5 @@ gunicorn api_modelo:app \
 
 # Mensaje de servicio iniciado
 echo "Servicio Flask ML ejecutándose en el puerto $PORT"
+
 
