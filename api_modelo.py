@@ -3,56 +3,44 @@ import joblib
 import numpy as np
 import pandas as pd
 
-# Crear la aplicación Flask
+# Crear la app
 app = Flask(__name__)
 
-# === Cargar el modelo entrenado ===
-# Asegúrate de que modelo.pkl esté en el mismo directorio que app.py
-try:
-    modelo = joblib.load("modelo.pkl")
-except Exception as e:
-    modelo = None
-    print(f"⚠️ No se pudo cargar el modelo: {e}")
+# === Cargar el modelo ===
+modelo = joblib.load("modelo_entrenado.pkl")
 
-# === Ruta raíz para verificar que la API funciona ===
+# === Ruta de prueba (GET) ===
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({
-        "mensaje": "✅ API de predicción funcionando",
-        "usar": "Haz POST a /predecir con los datos necesarios"
-    })
+    return jsonify({"mensaje": "API de Predicción funcionando correctamente 🚀"})
 
-# === Ruta de predicción ===
+# === Ruta para predecir (POST) ===
 @app.route("/predecir", methods=["POST"])
 def predecir():
-    if modelo is None:
-        return jsonify({"error": "❌ Modelo no cargado en el servidor"}), 500
-
     try:
-        # Recibir datos en formato JSON
-        datos = request.get_json()
+        # Obtener datos en JSON
+        data = request.get_json(force=True)
 
-        # Validar que existan datos
-        if not datos:
-            return jsonify({"error": "No se recibieron datos"}), 400
+        # Validar datos
+        if not data:
+            return jsonify({"error": "No se enviaron datos"}), 400
 
-        # Convertir a DataFrame para que coincida con el entrenamiento
-        entrada = pd.DataFrame([datos])
+        # Convertir los valores en un DataFrame (asegúrate que las claves coincidan con las columnas que usaste para entrenar)
+        df = pd.DataFrame([data])
 
-        # Realizar predicción
-        prediccion = modelo.predict(entrada)
+        # Hacer la predicción
+        prediccion = modelo.predict(df)
 
+        # Respuesta
         return jsonify({
-            "entrada": datos,
-            "prediccion": prediccion.tolist()
+            "entrada": data,
+            "prediccion": float(prediccion[0])  # Convertimos a float para que sea serializable en JSON
         })
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
-# === Configuración para Render / Gunicorn ===
+# === Punto de entrada ===
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
-
-
-
+    app.run(host="0.0.0.0", port=5000)
