@@ -30,7 +30,6 @@ def home():
         "usar": "Haz POST a /predecir con los datos necesarios"
     })
 
-
 # === Ruta de predicción ===
 @app.route("/predecir", methods=["POST"])
 def predecir():
@@ -54,15 +53,18 @@ def predecir():
 
         # Hacer predicciones
         litros = modelos["litros"].predict(X)[0]
-        campo_seco = modelos["campo_seco"].predict(X)[0]
+        campo_seco_pred = modelos["campo_seco"].predict(X)[0]
         costo = modelos["costo"].predict(X)[0]
         desperdicio = modelos["desperdicio"].predict(X)[0]
         tiempo = modelos["tiempo"].predict(X)[0]
 
+        # Convertir campo_seco a SI/NO
+        campo_seco = "SI" if int(campo_seco_pred) == 1 else "NO"
+
         # Construir respuesta
         return jsonify({
             "litros_estimados": round(float(litros), 2),
-            "campo_seco": int(campo_seco),
+            "campo_seco": campo_seco,
             "costo_agua": round(float(costo), 2),
             "agua_desp": round(float(desperdicio), 2),
             "tiempo_riego": round(float(tiempo), 2)
@@ -71,6 +73,6 @@ def predecir():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
