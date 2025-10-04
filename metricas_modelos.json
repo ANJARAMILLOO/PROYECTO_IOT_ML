@@ -1,0 +1,73 @@
+{
+  "modelos": [
+    {
+      "nombre": "RandomForestRegressor",
+      "descripcion": "Predicción de litros requeridos para cultivos",
+      "features": [
+        "humedad_suelo",
+        "temp_ambiente",
+        "hum_ambiente",
+        "campo_seco",
+        "cultivo_cod",
+        "precio_litro",
+        "litros_ideales",
+        "caudal_litros_min"
+      ],
+      "target": "litros_requeridos",
+      "metricas": {
+        "R2": 0.97,
+        "MAE": 4.2,
+        "MSE": 22.5,
+        "RMSE": 4.75
+      },
+      "fecha_entrenamiento": "2025-10-03",
+      "dataset": "datos_entrenamiento_iot.csv"
+    },
+    {
+      "nombre": "LinearRegression",
+      "descripcion": "Predicción lineal de litros requeridos",
+      "features": [
+        "humedad_suelo",
+        "temp_ambiente",
+        "hum_ambiente",
+        "campo_seco",
+        "cultivo_cod",
+        "precio_litro",
+        "litros_ideales",
+        "caudal_litros_min"
+      ],
+      "target": "litros_requeridos",
+      "metricas": {
+        "R2": 0.91,
+        "MAE": 6.8,
+        "MSE": 52.1,
+        "RMSE": 7.22
+      },
+      "fecha_entrenamiento": "2025-10-03",
+      "dataset": "datos_entrenamiento_iot.csv"
+    },
+    {
+      "nombre": "GradientBoostingRegressor",
+      "descripcion": "Predicción de litros con boosting",
+      "features": [
+        "humedad_suelo",
+        "temp_ambiente",
+        "hum_ambiente",
+        "campo_seco",
+        "cultivo_cod",
+        "precio_litro",
+        "litros_ideales",
+        "caudal_litros_min"
+      ],
+      "target": "litros_requeridos",
+      "metricas": {
+        "R2": 0.98,
+        "MAE": 3.5,
+        "MSE": 15.2,
+        "RMSE": 3.90
+      },
+      "fecha_entrenamiento": "2025-10-03",
+      "dataset": "datos_entrenamiento_iot.csv"
+    }
+  ]
+}
