@@ -24,6 +24,16 @@ cultivo_map = {
     "ALFALFA": 3
 }
 
+# === Cargar métricas de los modelos ===
+metricas_modelos = {}
+if os.path.exists("metricas_modelos.json"):
+    try:
+        with open("metricas_modelos.json", "r") as f:
+            metricas_modelos = json.load(f)
+    except Exception as e:
+        print("⚠️ Error cargando metricas_modelos.json:", e)
+
+
 # === Ruta de prueba ===
 @app.route("/", methods=["GET"])
 def home():
@@ -32,18 +42,18 @@ def home():
         "usar": "Haz POST a /predecir con los datos necesarios"
     })
 
+
 # === Ruta de métricas ===
 @app.route("/metricas", methods=["GET"])
 def metricas():
     try:
-        if os.path.exists("metricas_modelos.json"):
-            with open("metricas_modelos.json", "r") as f:
-                metricas = json.load(f)
-            return jsonify(metricas)
+        if metricas_modelos:
+            return jsonify(metricas_modelos)
         else:
             return jsonify({"error": "No se encontró metricas_modelos.json"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 # === Ruta de predicción ===
 @app.route("/predecir", methods=["POST"])
@@ -59,7 +69,7 @@ def predecir():
         cultivo_cod = cultivo_map.get(data["tipo_cultivo"].upper(), 1)  # Default MAIZ
 
         # Crear input para el modelo
-        X = np.array([[ 
+        X = np.array([[
             float(data["humedad_suelo"]),
             cultivo_cod,
             float(data["temp_ambiente"]),
@@ -76,19 +86,26 @@ def predecir():
         # Convertir campo_seco a SI/NO
         campo_seco = "SI" if int(campo_seco_pred) == 1 else "NO"
 
-        # Construir respuesta
+        # Construir respuesta con métricas (si existen)
         return jsonify({
             "litros_estimados": round(float(litros), 2),
             "campo_seco": campo_seco,
             "costo_agua": round(float(costo), 2),
             "agua_desp": round(float(desperdicio), 2),
-            "tiempo_riego": round(float(tiempo), 2)
+            "tiempo_riego": round(float(tiempo), 2),
+            "precision_litros": metricas_modelos.get("litros"),
+            "precision_campo_seco": metricas_modelos.get("campo_seco"),
+            "precision_costo": metricas_modelos.get("costo"),
+            "precision_desperdicio": metricas_modelos.get("desperdicio"),
+            "precision_tiempo": metricas_modelos.get("tiempo")
         })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
 
 
