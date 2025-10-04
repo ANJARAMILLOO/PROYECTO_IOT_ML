@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 import joblib
 import numpy as np
+import json
+import os
 
 # Crear la app
 app = Flask(__name__)
@@ -14,7 +16,7 @@ modelos = {
     "tiempo": joblib.load("modelo_tiempo_riego_rf.joblib"),
 }
 
-# === Mapeo de cultivos (igual al script de entrenamiento) ===
+# === Mapeo de cultivos ===
 cultivo_map = {
     "CAÑA DE AZUCAR": 0,
     "MAIZ": 1,
@@ -29,6 +31,19 @@ def home():
         "mensaje": "✅ API de predicción funcionando",
         "usar": "Haz POST a /predecir con los datos necesarios"
     })
+
+# === Ruta de métricas ===
+@app.route("/metricas", methods=["GET"])
+def metricas():
+    try:
+        if os.path.exists("metricas_modelos.json"):
+            with open("metricas_modelos.json", "r") as f:
+                metricas = json.load(f)
+            return jsonify(metricas)
+        else:
+            return jsonify({"error": "No se encontró metricas_modelos.json"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # === Ruta de predicción ===
 @app.route("/predecir", methods=["POST"])
@@ -75,4 +90,5 @@ def predecir():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
 
