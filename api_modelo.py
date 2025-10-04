@@ -86,7 +86,6 @@ def predecir():
         campo_seco = "SI" if int(campo_seco_pred) == 1 else "NO"
 
         # === Cargar precisión promedio desde metricas_modelos.json o generar aleatoria ===
-        precision_global = None
         try:
             if os.path.exists("metricas_modelos.json"):
                 with open("metricas_modelos.json", "r") as f:
@@ -105,14 +104,14 @@ def predecir():
         except:
             precision_global = round(random.uniform(95, 98), 2)
 
-        # Construir respuesta
+        # Construir respuesta, precisión como string con 2 decimales
         return jsonify({
             "litros_estimados": round(float(litros), 2),
             "campo_seco": campo_seco,
             "costo_agua": round(float(costo), 2),
             "agua_desp": round(float(desperdicio), 2),
             "tiempo_riego": round(float(tiempo), 2),
-            "precision_modelo": precision_global
+            "precision_modelo": f"{precision_global:.2f}"
         })
 
     except Exception as e:
@@ -120,6 +119,7 @@ def predecir():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
 
 
 
