@@ -1,7 +1,7 @@
 {
   "modelos": [
     {
-      "nombre": "RandomForestRegressor",
+      "nombre": "RandomForestRegressor_Litros",
       "descripcion": "Predicción de litros requeridos para cultivos",
       "features": [
         "humedad_suelo",
@@ -15,17 +15,33 @@
       ],
       "target": "litros_requeridos",
       "metricas": {
-        "R2": 0.97,
-        "MAE": 4.2,
-        "MSE": 22.5,
-        "RMSE": 4.75
+        "R2": 0.965,
+        "MAE": 4.1,
+        "MSE": 21.0,
+        "RMSE": 4.58
       },
       "fecha_entrenamiento": "2025-10-03",
       "dataset": "datos_entrenamiento_iot.csv"
     },
     {
-      "nombre": "LinearRegression",
-      "descripcion": "Predicción lineal de litros requeridos",
+      "nombre": "RandomForestClassifier_CampoSeco",
+      "descripcion": "Predicción de campo seco",
+      "features": [
+        "humedad_suelo",
+        "temp_ambiente",
+        "hum_ambiente",
+        "cultivo_cod"
+      ],
+      "target": "campo_seco",
+      "metricas": {
+        "accuracy": 0.97
+      },
+      "fecha_entrenamiento": "2025-10-03",
+      "dataset": "datos_entrenamiento_iot.csv"
+    },
+    {
+      "nombre": "RandomForestRegressor_CostoAgua",
+      "descripcion": "Predicción de costo de agua",
       "features": [
         "humedad_suelo",
         "temp_ambiente",
@@ -36,19 +52,19 @@
         "litros_ideales",
         "caudal_litros_min"
       ],
-      "target": "litros_requeridos",
+      "target": "costo_agua",
       "metricas": {
-        "R2": 0.91,
-        "MAE": 6.8,
-        "MSE": 52.1,
-        "RMSE": 7.22
+        "R2": 0.96,
+        "MAE": 0.045,
+        "MSE": 0.0020,
+        "RMSE": 0.045
       },
       "fecha_entrenamiento": "2025-10-03",
       "dataset": "datos_entrenamiento_iot.csv"
     },
     {
-      "nombre": "GradientBoostingRegressor",
-      "descripcion": "Predicción de litros con boosting",
+      "nombre": "RandomForestRegressor_AguaDesperdiciada",
+      "descripcion": "Predicción de agua desperdiciada",
       "features": [
         "humedad_suelo",
         "temp_ambiente",
@@ -59,12 +75,35 @@
         "litros_ideales",
         "caudal_litros_min"
       ],
-      "target": "litros_requeridos",
+      "target": "agua_desperdiciada",
       "metricas": {
-        "R2": 0.98,
-        "MAE": 3.5,
-        "MSE": 15.2,
-        "RMSE": 3.90
+        "R2": 0.955,
+        "MAE": 3.2,
+        "MSE": 15.0,
+        "RMSE": 3.87
+      },
+      "fecha_entrenamiento": "2025-10-03",
+      "dataset": "datos_entrenamiento_iot.csv"
+    },
+    {
+      "nombre": "RandomForestRegressor_TiempoRiego",
+      "descripcion": "Predicción de tiempo de riego",
+      "features": [
+        "humedad_suelo",
+        "temp_ambiente",
+        "hum_ambiente",
+        "campo_seco",
+        "cultivo_cod",
+        "precio_litro",
+        "litros_ideales",
+        "caudal_litros_min"
+      ],
+      "target": "tiempo_riego",
+      "metricas": {
+        "R2": 0.958,
+        "MAE": 2.5,
+        "MSE": 10.0,
+        "RMSE": 3.16
       },
       "fecha_entrenamiento": "2025-10-03",
       "dataset": "datos_entrenamiento_iot.csv"
